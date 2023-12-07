@@ -59,3 +59,48 @@ colnames(merged)[colnames(merged) == "latitutde"] <- "latitude"
 ```{r}
 income_readiness <- merged[, c("city", "state", "geo_id", "percent_of_population_spending_over_50_percent_of_income_on_rent_2015", "percent_of_population_in_poverty_2015", "latitude", "longitude", "county", "region", "median_income", "overall_readiness")]
 ```
+
+```{r}
+#create scatterplot to understand information
+
+ggplot(data=income_readiness, aes(x=percent_of_population_in_poverty_2015, y = overall_readiness)) + 
+  geom_point(size=3) + 
+  theme_bw() + 
+  labs(title = "Scatterplot of % in Poverty vs Overall Readiness for Climate Adapatation",
+       x = "Percent of population in poverty (2015)", y = "Overall readiness")
+)
+```
+
+```{r}
+# Compute the correlation coefficient to quantify the strength and direction of the relationship
+
+cor(income_readiness$percent_of_population_in_poverty_2015, income_readiness$overall_readiness)
+```
+
+```         
+Magnitude of the Correlation Coefficient:
+
+The correlation coefficient ranges from -1 to 1.
+A value of -1 indicates a perfect negative correlation, 0 indicates no correlation, and 1 indicates a perfect positive correlation.
+In this case, the value is close to 0, which suggests a weak correlation.
+Sign of the Correlation Coefficient:
+
+The negative sign indicates a negative correlation.
+A negative correlation means that as one variable (percentage in poverty) increases, the other variable (overall adaptation readiness) tends to decrease.
+Interpretation:
+
+With a correlation coefficient of -0.1565957, there is a slight tendency that areas with a higher percentage of people in poverty may have lower overall adaptation readiness.
+However, the correlation is weak, suggesting that other factors not considered in this analysis may play a more significant role in determining overall adaptation readiness.
+Caution:
+
+Correlation does not imply causation. Even though there is a correlation, it doesn't necessarily mean that poverty causes lower adaptation readiness or vice versa. Other factors might contribute to the observed relationship.
+Further Analysis:
+
+Consider exploring additional variables or conducting regression analysis to better understand the specific nature and strength of the relationship, while controlling for potential confounding variables.
+Assess the statistical significance of the correlation coefficient to determine whether the observed relationship is likely due to chance.
+In summary, the negative correlation coefficient suggests a weak tendency for areas with a higher percentage of people in poverty to have lower overall adaptation readiness. However, the strength of this relationship is not strong, and it's important to interpret such correlations cautiously, considering other factors that might influence the observed pattern.
+```
+
+```{r}
+
+```
