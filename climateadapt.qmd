@@ -49,3 +49,13 @@ merged <- merge(city_indicators, readiness, by = "city", all = TRUE)
 
 nrow(merged)
 ```
+
+```{r}
+colnames(merged)[colnames(merged) == "geo_id.x"] <- "geo_id"
+colnames(merged)[colnames(merged) == "state.x"] <- "state"
+colnames(merged)[colnames(merged) == "latitutde"] <- "latitude"
+```
+
+```{r}
+income_readiness <- merged[, c("city", "state", "geo_id", "percent_of_population_spending_over_50_percent_of_income_on_rent_2015", "percent_of_population_in_poverty_2015", "latitude", "longitude", "county", "region", "median_income", "overall_readiness")]
+```
