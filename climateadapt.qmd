@@ -68,7 +68,6 @@ ggplot(data=income_readiness, aes(x=percent_of_population_in_poverty_2015, y = o
   theme_bw() + 
   labs(title = "Scatterplot of % in Poverty vs Overall Readiness for Climate Adapatation",
        x = "Percent of population in poverty (2015)", y = "Overall readiness")
-)
 ```
 
 ```{r}
@@ -102,5 +101,39 @@ In summary, the negative correlation coefficient suggests a weak tendency for ar
 ```
 
 ```{r}
+# Linear regression model
+linear_regression <- lm(overall_readiness ~ percent_of_population_in_poverty_2015, data = income_readiness)
 
+# Summary of the model
+summary(linear_regression)
+```
+
+```         
+Intercept (0.5098146):
+
+The intercept represents the estimated value of the dependent variable when all independent variables are zero.
+In this context, when the percentage of the population in poverty is zero, the estimated value of the overall adaptation readiness is approximately 0.5098.
+
+Percentage of Population in Poverty Coefficient (-0.0023953):
+
+The coefficient for the variable "percent_of_population_in_poverty_2015" represents the estimated change in the dependent variable (overall adaptation readiness) for a one-unit change in the independent variable (percentage of population in poverty).
+In this case, for every one-unit increase in the percentage of the population in poverty, the overall adaptation readiness is estimated to decrease by approximately 0.0024.
+The t-value of -2.634 indicates that this coefficient is statistically significant (p = 0.00891), suggesting that the percentage of the population in poverty has a significant effect on overall adaptation readiness.
+
+In summary, the model suggests that both the intercept and the percentage of the population in poverty are statistically significant in predicting overall adaptation readiness. 
+```
+
+```{r}
+ggplot(data=linear_regression, aes(x=percent_of_population_in_poverty_2015, y = overall_readiness)) + 
+  geom_point(alpha=0.1, linewidth=3) + 
+  geom_smooth(method='lm', formula= y~x, color="lightcoral", se=F, size=1.5) +
+  theme_bw() +
+  labs(title = "Regression line overlaid on scatter plot",
+       x = "Percent of population in poverty (2015)", y = "Overall readiness")
+```
+
+
+```{r}
+# Hypothesis testing
+summary(linear_regression)$coefficients
 ```
