@@ -1,0 +1,51 @@
+---
+title: "Climate Adaptation and Income"
+format: html
+editor: visual
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load all the packages needed here
+library(tidyverse)
+library(readr)
+library(gt)
+library(tufte)
+library(sf)
+library(feasts)
+library(dplyr)
+library(janitor)
+
+# Set the filepath here
+rootdir <- ("/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt")
+
+datadir <- file.path(rootdir,"data")
+```
+
+```{r}
+# Import data
+city_indicators <- read.csv("data/City Indicators.csv")
+readiness <- read.csv("data/Overall Risk & Readiness Scores.csv")
+```
+
+```{r}
+# Clean column names for both datasets
+city_indicators <- clean_names(city_indicators)
+readiness <- clean_names(readiness)
+```
+
+```{r}
+# Explore data
+nrow(city_indicators)
+```
+
+```{r}
+nrow(readiness)
+```
+
+```{r}
+merged <- merge(city_indicators, readiness, by = "city", all = TRUE)
+
+nrow(merged)
+```
