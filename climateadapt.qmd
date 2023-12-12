@@ -1,8 +1,55 @@
 ---
-title: "Climate Adaptation and Income"
+title: "Climate Adaptation Readiness and Poverty"
+author: Liane Chen
+published: December 11, 2023
 format: html
 editor: visual
 ---
+
+# Impact of Poverty on Overall Readiness for Climate Adaptation
+
+This blog post will explore analysis conducted on whether poverty impacts overall readiness to implement climate adaptation measures at both national and regional levels in the United States.
+
+## Research Question
+
+What impact does the percentage of population in poverty have on overall readiness score for climate adaptation?
+
+### Motivation
+Climate change is upon us. The task of addressing its intensifying effects is daunting and more urgent than ever. 
+
+At the global stage, we have seen governments iterate the importance of climate adaptation and resilience. Adopted in 2015 and signed in 2016, the Paris Agreement is a legally binding international treaty on climate change. All Parties to the Paris Agreement committed to strengthening the global response to climate change by increasing the ability of all to adapt and build resilience, and reduce vulnerability. 
+
+In order to do so, governments will need access to clear and accurate data as they move to prepare our economies and communities as a whole. It is important to consider the effects of adaptation on less resourced communities, as poor populations tend to be the most vulnerable to climate change and least able to adapt because of limited capacity to cope with climate variability and extremes. Many socially vulnerable groups (i.e., low-income households, communities of color, the unhoused, and immigrant populations) live in urban areas that are prone to extreme heat (urban heat islands). Some may also live in housing that does have adequate insulation or cooling. Others may not be able to afford air conditioning. It should be noted that this is just one aspect of social vulnerability. 
+
+
+### Data
+
+The climate adaptation readiness and poverty data used for this analysis is publicly available from the Notre Dame Global Adaptation Initiative through its Urban Adaptation Assessment. The data is available in CSV format, with nine independent files that reflect data used to generate each of the hazard scores and forecasts and the primary data at the city level and sub-city level (census tract). Each file has a common city, state and geographic identifiers (GEOIDs) variable that permits easy identification and merging, if necessary. The City Indicators.csv and Overall Risk & Readiness Scores.csv files were both used for the analysis. 
+
+
+## Data Analysis
+
+I started with basic analysis to explore the data. Luckily, the two data files have common geospatial and temporal features that allowed for easy manipulation and use. There was minor cleaning required to correct inaccurate spelling and to ensure uniform formatting in column names. Once I checked that both data files had matching cities and number of rows, I combined the datasets based on city names to create a dataframe including percent of population in poverty information and overall climate adaptation readiness. I also removed certain columns to make the merged dataframe easier to work with. 
+
+Next, I chose to conduct a simple linear regression model as the two variables I am studying are numeric values. I used 'ggplot' to create a scatter plot comparing the percent of population in poverty to the climate readiness score for each city. Then I used 'geom_smooth()' to plot the linear regression between poverty and climate readiness. As a basic gut check, the line shows that there is a negative correlation between the two variables, which makes sense as higher poverty would decrease ability to implement costly climate adaptation measures. 
+
+Slope
+
+Correlation coefficient
+
+p-value
+
+I also conducted hypothesis testing to see whether there was a difference in the impact of poverty on climate readiness between two regions (West and South). 
+
+point estimate
+
+standard error
+
+z-score
+
+t-test
+
+reject the null
 
 ```{r}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,6 +63,7 @@ library(sf)
 library(feasts)
 library(dplyr)
 library(janitor)
+library(ggplot2)
 
 # Set the filepath here
 rootdir <- ("/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt")
@@ -108,7 +156,68 @@ linear_regression <- lm(overall_readiness ~ percent_of_population_in_poverty_201
 summary(linear_regression)
 ```
 
+```{r}
+# compute point estimate
+pt_est_poverty_west = income_readiness %>% 
+  filter(region == "West") %>% 
+  summarize(mean(percent_of_population_in_poverty_2015))
+
+pt_est_poverty_south = income_readiness %>% 
+  filter(region == "South") %>% 
+  summarize(mean(percent_of_population_in_poverty_2015))
+
+point_est = as.numeric(pt_est_poverty_west - pt_est_poverty_south)
+print(point_est) 
+```
+
+```{r}
+# compute standard error
+n1 = income_readiness %>% filter(region == "West") %>% count()
+n2 = income_readiness %>% filter(region == "South") %>% count()
+s1 = income_readiness %>% filter(region == "West") %>% summarize(sd(percent_of_population_in_poverty_2015, na.rm = TRUE))
+s2 = income_readiness %>% filter(region == "South") %>% summarize(sd(percent_of_population_in_poverty_2015, na.rm = TRUE))
+
+SE = as.numeric(sqrt(s1^2/n1 + s2^2/n2))
+print(SE)
+```
+
+```{r}
+# compute test statistic
+zscore = (point_est - 0)/SE
+print(zscore)
+```
+
+```{r}
+two_tailed <- t.test(income_readiness$overall_readiness[income_readiness$region=="West"], income_readiness$overall_readiness[income_readiness$region=="South"])
+
+two_tailed
+```
+
 ```         
+P-value and Hypothesis Testing for Different Regions (West and South)
+p-value: 0.01698
+
+Null: The mean score for overall climate adaptation readiness in the West region is equal to the mean score for overall climate adaptation readiness in the South region (no difference).
+        H_0: u_WestReadiness - u_SouthReadiness = 0
+        
+Alternative: The mean score for overall climate adaptation readiness in the West region is NOT equal to the mean score for overall climate adaptation readiness in the South region (yes, there is a difference).
+       H_A: u_WestReadiness - u_SouthReadiness != 0
+
+Given that the p-value is less than the significance level of alpha=0.05, we reject the null hypothesis. Therefore, we can say that there is a difference in mean overall climate adaptation readiness between the West and the South. 
+```
+
+```         
+P-value and Hypothesis Testing:
+p-value: 0.00891
+
+Null: The percent of population in poverty in 2015 does not have an impact on overall climate adaptation readiness score for a city (no impact).
+        H_0: u_nonpoverty - u_poverty = 0
+        
+Alternative: The percent of population in poverty in 2015 does not have an impact on overall climate adaptation readiness score for a city (yes, there is impact).
+       H_A: u_nonpoverty - u_poverty != 0
+
+Given that the p-value is less than the significance level of alpha=0.05, we reject the null hypothesis.
+
 Intercept (0.5098146):
 
 The intercept represents the estimated value of the dependent variable when all independent variables are zero.
@@ -116,8 +225,10 @@ In this context, when the percentage of the population in poverty is zero, the e
 
 Percentage of Population in Poverty Coefficient (-0.0023953):
 
-The coefficient for the variable "percent_of_population_in_poverty_2015" represents the estimated change in the dependent variable (overall adaptation readiness) for a one-unit change in the independent variable (percentage of population in poverty).
+The coefficient for the variable "percent_of_population_in_poverty_2015" represents the estimated change in the dependent variable (overall adaptation readiness) for a one-unit change (change of one-percent) in the independent variable (percentage of population in poverty).
+
 In this case, for every one-unit increase in the percentage of the population in poverty, the overall adaptation readiness is estimated to decrease by approximately 0.0024.
+
 The t-value of -2.634 indicates that this coefficient is statistically significant (p = 0.00891), suggesting that the percentage of the population in poverty has a significant effect on overall adaptation readiness.
 
 In summary, the model suggests that both the intercept and the percentage of the population in poverty are statistically significant in predicting overall adaptation readiness. 
@@ -132,8 +243,39 @@ ggplot(data=linear_regression, aes(x=percent_of_population_in_poverty_2015, y = 
        x = "Percent of population in poverty (2015)", y = "Overall readiness")
 ```
 
-
 ```{r}
 # Hypothesis testing
 summary(linear_regression)$coefficients
 ```
+
+
+## Results
+We are able to reject the null hypothesis and conclude that the percentage of people living in poverty does have an impact on a city's climate adaptation readiness score. It should be noted that while there is a correlation, it is relatively weak, which suggests that further analysis should be completed. 
+
+
+## Future Work
+
+### More Cities Data
+The datasets used included 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000. However, increased data for cities with population under 100,000 would provide a broader understanding of potential opportunity areas for climate adaptation. 
+
+### Additional Years of Poverty Data
+This analysis would benefit from additional years of data for percentage of populations living in poverty. While these numbers would likely not vary too dramatically between years, it would provide more accurate data. 
+
+### Wealth Data
+We have available data for percentage of populations living in poverty, but what about wealthy populations? It would be helpful to be able to compare whether wealth has an impact on climate adaptation readiness. 
+
+
+
+## Code Availability
+
+```         
+Git
+```
+
+## Literature Cited
+https://gain-uaa.nd.edu/about/
+https://www.un.org/en/climatechange/climate-adaptation
+https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7 
+https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations.
+
+
