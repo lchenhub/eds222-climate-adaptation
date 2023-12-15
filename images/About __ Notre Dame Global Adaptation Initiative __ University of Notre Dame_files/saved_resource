@@ -1,0 +1,65 @@
+/*
+ * ND Network Bar
+ *
+ * Copyright (c) 2011 University of Notre Dame
+ *
+ * Date: 2011-10-18
+ * Updated: 2023-05-24
+ * Version: 1.3
+ */
+
+(function() {
+  var n = {
+    init: function() {
+      var head = document.getElementsByTagName("head")[0],
+          cssNode = document.createElement('link'),
+          activeAlert = false      ;
+      cssNode.type = 'text/css';
+      cssNode.rel = 'stylesheet';
+      cssNode.href = 'https://emergency.nd.edu/api/alert/alert.css';
+      cssNode.media = 'all';
+      // Only add the CSS and HTML if we have an active alert
+      if(activeAlert == true ) {
+        head.appendChild(cssNode);
+        document.body.insertBefore(this.createHTML(), document.body.childNodes[0]);
+        window.setTimeout(function() {
+          document.documentElement.style.marginTop = document.getElementById('ndalertbar').offsetHeight + 'px';
+        }, 200);
+      }
+    },
+    createHTML: function() {
+      var c = document.getElementById('ndalertbarscript'),
+          backgroundPosition = 0      ;
+      var htmlStr = '<div id="ndalertbar">';
+            var frag = document.createDocumentFragment(),
+          temp = document.createElement('div')
+      ;
+      temp.innerHTML = htmlStr;
+      while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+      }
+
+      if(this.checkDomain() === true) {
+        // document.documentElement.className += " html" + backgroundPosition;
+        return frag;
+      } else {
+        return document.createDocumentFragment();
+      }
+
+    },
+    checkDomain: function() {
+      // Restrict to nd.edu domains
+      var whitelist = ['nd.edu','nd.dev','localhost'],
+          hostname = document.location.hostname,
+          i,
+          l = whitelist.length
+      ;
+      for(i=0; i<l; i++) {
+        if(hostname.match(whitelist[i])) return true;
+      }
+      return false;
+    }
+
+  };
+  n.init();
+})();

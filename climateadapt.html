@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Liane Chen">
-<meta name="dcterms.date" content="2023-12-12">
+<meta name="dcterms.date" content="2023-12-15">
 
 <title>Impact of Poverty on a City’s Overall Readiness for Climate Adaptation</title>
 <style>
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 12, 2023</p>
+      <p class="date">December 15, 2023</p>
     </div>
   </div>
   
@@ -135,6 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Climate change is upon us. The task of addressing its intensifying effects is daunting and more urgent than ever. We need to adapt to climate change now, which means taking action to adjust to its present and future impacts (EU 2023).</p>
 <p>Adaptation and resilience refers to adjustments in ecological, social or economic systems in response to actual or expected climatic stimuli and their effects. At the global stage, we have seen governments iterate the importance of climate adaptation and resilience. Adopted in 2015 and signed in 2016, the Paris Agreement is a legally binding international treaty on climate change. All Parties to the Paris Agreement committed to strengthening the global response to climate change by increasing the ability of all to adapt and build resilience, and reduce vulnerability. In order to do so, governments will need access to clear and accurate data as they move to prepare our economies and communities as a whole. It is important to consider the effects of adaptation on less resourced communities, as poor populations tend to be the most vulnerable to climate change and least able to adapt because of limited capacity to cope with climate variability and extremes. For example, many socially vulnerable groups (i.e., low-income households, communities of color, the unhoused, and immigrant populations) live in urban areas that are prone to extreme heat (urban heat islands). Some may also live in housing that does have adequate insulation or cooling. Others may not be able to afford air conditioning. It should be noted that this is just one aspect of social vulnerability and overlaps may occur.</p>
 <p>This analysis will provide exploratory analysis on whether poverty is a factor in how ready a city is for climate change. A total of 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 people will be examined.</p>
+<p><img src="images/Screenshot%202023-12-15%20at%202.15.10%20PM.png" class="img-fluid" style="width:80.0%"></p>
 </section>
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
@@ -145,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
 <p>I started with basic analysis to explore the data. Luckily, the two data files have common geospatial and temporal features that allowed for easy manipulation and use. Minor cleaning was required to correct inaccurate spelling and to ensure uniform formatting in column names. Once I checked that both data files had matching cities and number of observations, I combined the datasets based on city names to create a merged dataframe which includes percentage of population in poverty and overall climate adaptation readiness. I also removed certain columns to make the merged dataframe easier to work with.</p>
 <p>Next, I chose to conduct a simple linear regression model as the two variables I am studying are numeric values. I used ‘ggplot’ to create a scatter plot comparing the percent of population in poverty to the climate readiness score for each city. Then I used ‘geom_smooth()’ to plot the linear regression between poverty and climate readiness. As a basic gut check, the line shows that there is a negative correlation between the two variables, which makes sense as higher poverty would decrease ability to implement costly climate adaptation measures.</p>
-<p>I also conducted hypothesis testing to see whether there was a difference in the impact of poverty on climate readiness between two regions (West and South).</p>
+<p>I also conducted a two-tailed t-test to see whether there was a difference in the impact of poverty on climate readiness between two regions (West and South).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -376,14 +377,18 @@ mean of x mean of y
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <section id="data-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-1">Data</h3>
-<p>University of Notre Dame, Global Adaptation Initiative: https://gain-uaa.nd.edu/</p>
+<ol type="1">
+<li>University of Notre Dame, Global Adaptation Initiative: https://gain-uaa.nd.edu/</li>
+</ol>
 </section>
 <section id="literature-cited" class="level3">
 <h3 class="anchored" data-anchor-id="literature-cited">Literature Cited</h3>
-<p>European Union(EU) 2003. European Commission, Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en</p>
-<p>United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation</p>
-<p>United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7</p>
-<p>United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&amp;text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations</p>
+<ol type="1">
+<li><p>European Union(EU) 2003. European Commission, Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en</p></li>
+<li><p>United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation</p></li>
+<li><p>United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7</p></li>
+<li><p>United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&amp;text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations</p></li>
+</ol>
 </section>
 </section>
 </section>
@@ -392,13 +397,13 @@ mean of x mean of y
   author = {Chen, Liane},
   title = {Impact of {Poverty} on a {City’s} {Overall} {Readiness} for
     {Climate} {Adaptation}},
-  date = {2023-12-12},
-  url = {https://lchenhub.github.io/blog/2023-12-12-Poverty-and-Climate-Readiness/},
+  date = {2023-12-15},
+  url = {https://lchenhub.github.io/blog/2023-12-15-Poverty-and-Climate-Readiness/},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-chen2023" class="csl-entry quarto-appendix-citeas" role="listitem">
 Chen, Liane. 2023. <span>“Impact of Poverty on a City’s Overall
-Readiness for Climate Adaptation.”</span> December 12, 2023. <a href="https://lchenhub.github.io/blog/2023-12-12-Poverty-and-Climate-Readiness/">https://lchenhub.github.io/blog/2023-12-12-Poverty-and-Climate-Readiness/</a>.
+Readiness for Climate Adaptation.”</span> December 15, 2023. <a href="https://lchenhub.github.io/blog/2023-12-15-Poverty-and-Climate-Readiness/">https://lchenhub.github.io/blog/2023-12-15-Poverty-and-Climate-Readiness/</a>.
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">

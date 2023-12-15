@@ -5,10 +5,10 @@ author:
     url: https://lchenhub.github.io/
     affiliation: MEDS (UCSB) 
     affiliation-url: https://bren.ucsb.edu/masters-programs/master-environmental-data-science
-date: 12-12-2023
+date: 12-15-2023
 categories: [MEDS, Statistics, Poverty, Climate Adaptation, R]
 citation:
-    url: https://lchenhub.github.io/blog/2023-12-12-Poverty-and-Climate-Readiness/
+    url: https://lchenhub.github.io/blog/2023-12-15-Poverty-and-Climate-Readiness/
 image: images/poverty_climate.jpg
 ---
 
@@ -28,6 +28,8 @@ Adaptation and resilience refers to adjustments in ecological, social or economi
 
 This analysis will provide exploratory analysis on whether poverty is a factor in how ready a city is for climate change. A total of 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 people will be examined.
 
+![](images/Screenshot 2023-12-15 at 2.15.10 PM.png){width="80%"}
+
 ### Data
 
 Climate adaptation readiness (hereon referred to as 'climate readiness') and poverty data used for this analysis is publicly available from the Notre Dame Global Adaptation Initiative through its Urban Adaptation Assessment. The data is available in CSV format, with nine independent files that reflect data used to generate each of the hazard scores and forecasts and the primary data at the city level and sub-city level (census tract). Each file has a common city, state and geographic identifiers (GEOIDs) variable that permits easy identification and merging, if necessary. The City Indicators.csv and Overall Risk & Readiness Scores.csv files were both used for the analysis.
@@ -38,7 +40,7 @@ I started with basic analysis to explore the data. Luckily, the two data files h
 
 Next, I chose to conduct a simple linear regression model as the two variables I am studying are numeric values. I used 'ggplot' to create a scatter plot comparing the percent of population in poverty to the climate readiness score for each city. Then I used 'geom_smooth()' to plot the linear regression between poverty and climate readiness. As a basic gut check, the line shows that there is a negative correlation between the two variables, which makes sense as higher poverty would decrease ability to implement costly climate adaptation measures.
 
-I also conducted hypothesis testing to see whether there was a difference in the impact of poverty on climate readiness between two regions (West and South).
+I also conducted a two-tailed t-test to see whether there was a difference in the impact of poverty on climate readiness between two regions (West and South).
 
 ```{r, warning = F, message = F,  results='hide'}
 knitr::opts_chunk$set(echo = TRUE)
@@ -236,14 +238,14 @@ https://github.com/lchenhub/eds222-climate-adaptation.git
 
 ### Data
 
-University of Notre Dame, Global Adaptation Initiative: https://gain-uaa.nd.edu/
+1.  University of Notre Dame, Global Adaptation Initiative: https://gain-uaa.nd.edu/
 
 ### Literature Cited
 
-European Union(EU) 2003. European Commission, Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en
+1.  European Union(EU) 2003. European Commission, Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en
 
-United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation
+2.  United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation
 
-United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7
+3.  United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7
 
-United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:\~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations
+4.  United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:\~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations
