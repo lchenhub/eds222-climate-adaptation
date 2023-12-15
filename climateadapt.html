@@ -126,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all the packages needed </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load all the packages needed </span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the filepath  </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># set the filepath  </span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>rootdir <span class="ot">&lt;-</span> (<span class="st">"/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt"</span>)</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>datadir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(rootdir,<span class="st">"data"</span>)</span>
@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The slope of the regression line shows to be slightly negative, as y decreases while x increases. This seems to make intuitive sense, as increased poverty could relate to decreased ability to adapt to climate variability and extremes.</p>
 <p>The slope is not too steep, so let’s take a look at correlation to see how strongly poverty impacts climate adaptation readiness.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness</span></span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(income_readiness<span class="sc">$</span>percent_of_population_in_poverty_2015, income_readiness<span class="sc">$</span>overall_readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -261,7 +261,7 @@ percent_of_population_in_poverty_2015 8.913263e-03</code></pre>
 </section>
 <section id="two-tailed-t-testing" class="level2">
 <h2 class="anchored" data-anchor-id="two-tailed-t-testing">Two-Tailed T-Testing</h2>
-<p>I am curious whether there is a difference between how poverty impacts climate readiness in different regions of the country. Let’s conduct a hypothesis test.</p>
+<p>I am curious whether there is a difference between how poverty impacts climate readiness in different regions of the country. Let’s conduct a two-tailed t-test.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute point estimate</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pt_est_poverty_west <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> </span>
@@ -357,7 +357,7 @@ mean of x mean of y
 </section>
 <section id="literature-cited" class="level3">
 <h3 class="anchored" data-anchor-id="literature-cited">Literature Cited</h3>
-<p>European Commission 2003. Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en</p>
+<p>European Union(EU) 2003. European Commission, Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en</p>
 <p>United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation</p>
 <p>United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7</p>
 <p>United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&amp;text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations</p>

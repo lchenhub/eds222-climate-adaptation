@@ -37,7 +37,7 @@ I also conducted hypothesis testing to see whether there was a difference in the
 ```{r, warning = F, message = F,  results='hide'}
 knitr::opts_chunk$set(echo = TRUE)
 
-# Load all the packages needed 
+# load all the packages needed 
 library(tidyverse)
 library(readr)
 library(gt)
@@ -48,7 +48,7 @@ library(dplyr)
 library(janitor)
 library(ggplot2)
 
-# Set the filepath  
+# set the filepath  
 rootdir <- ("/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt")
 
 datadir <- file.path(rootdir,"data")
@@ -99,7 +99,7 @@ The slope of the regression line shows to be slightly negative, as y decreases w
 The slope is not too steep, so let's take a look at correlation to see how strongly poverty impacts climate adaptation readiness.
 
 ```{r}
-# Compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness
+# compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness
 
 cor(income_readiness$percent_of_population_in_poverty_2015, income_readiness$overall_readiness)
 ```
@@ -151,7 +151,7 @@ In summary, the model suggests that both the intercept and the percentage of the
 
 ## Two-Tailed T-Testing
 
-I am curious whether there is a difference between how poverty impacts climate readiness in different regions of the country. Let's conduct a hypothesis test.
+I am curious whether there is a difference between how poverty impacts climate readiness in different regions of the country. Let's conduct a two-tailed t-test.
 
 ```{r}
 # compute point estimate
