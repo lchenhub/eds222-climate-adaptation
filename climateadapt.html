@@ -110,12 +110,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="motivation" class="level3">
 <h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
 <p>Climate change is upon us. The task of addressing its intensifying effects is daunting and more urgent than ever. We need to adapt to climate change now, which means taking action to adjust to its present and future impacts (EU 2023).</p>
-<p>At the global stage, we have seen governments iterate the importance of climate adaptation and resilience. Adopted in 2015 and signed in 2016, the Paris Agreement is a legally binding international treaty on climate change. All Parties to the Paris Agreement committed to strengthening the global response to climate change by increasing the ability of all to adapt and build resilience, and reduce vulnerability. In order to do so, governments will need access to clear and accurate data as they move to prepare our economies and communities as a whole. It is important to consider the effects of adaptation on less resourced communities, as poor populations tend to be the most vulnerable to climate change and least able to adapt because of limited capacity to cope with climate variability and extremes. For example, many socially vulnerable groups (i.e., low-income households, communities of color, the unhoused, and immigrant populations) live in urban areas that are prone to extreme heat (urban heat islands). Some may also live in housing that does have adequate insulation or cooling. Others may not be able to afford air conditioning. It should be noted that this is just one aspect of social vulnerability and overlaps may occur.</p>
-<p>This analysis will provide exploratory analysis on whether poverty is a factor in how ready a city is for climate change. A total of 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 will be examined.</p>
+<p>Adaptation and resilience refers to adjustments in ecological, social or economic systems in response to actual or expected climatic stimuli and their effects. At the global stage, we have seen governments iterate the importance of climate adaptation and resilience. Adopted in 2015 and signed in 2016, the Paris Agreement is a legally binding international treaty on climate change. All Parties to the Paris Agreement committed to strengthening the global response to climate change by increasing the ability of all to adapt and build resilience, and reduce vulnerability. In order to do so, governments will need access to clear and accurate data as they move to prepare our economies and communities as a whole. It is important to consider the effects of adaptation on less resourced communities, as poor populations tend to be the most vulnerable to climate change and least able to adapt because of limited capacity to cope with climate variability and extremes. For example, many socially vulnerable groups (i.e., low-income households, communities of color, the unhoused, and immigrant populations) live in urban areas that are prone to extreme heat (urban heat islands). Some may also live in housing that does have adequate insulation or cooling. Others may not be able to afford air conditioning. It should be noted that this is just one aspect of social vulnerability and overlaps may occur.</p>
+<p>This analysis will provide exploratory analysis on whether poverty is a factor in how ready a city is for climate change. A total of 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 people will be examined.</p>
 </section>
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
-<p>The climate adaptation readiness and poverty data used for this analysis is publicly available from the Notre Dame Global Adaptation Initiative through its Urban Adaptation Assessment. The data is available in CSV format, with nine independent files that reflect data used to generate each of the hazard scores and forecasts and the primary data at the city level and sub-city level (census tract). Each file has a common city, state and geographic identifiers (GEOIDs) variable that permits easy identification and merging, if necessary. The City Indicators.csv and Overall Risk &amp; Readiness Scores.csv files were both used for the analysis.</p>
+<p>Climate adaptation readiness (hereon referred to as ‘climate readiness’) and poverty data used for this analysis is publicly available from the Notre Dame Global Adaptation Initiative through its Urban Adaptation Assessment. The data is available in CSV format, with nine independent files that reflect data used to generate each of the hazard scores and forecasts and the primary data at the city level and sub-city level (census tract). Each file has a common city, state and geographic identifiers (GEOIDs) variable that permits easy identification and merging, if necessary. The City Indicators.csv and Overall Risk &amp; Readiness Scores.csv files were both used for the analysis.</p>
 </section>
 </section>
 <section id="data-analysis" class="level2">
@@ -127,109 +127,74 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all the packages needed </span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tufte)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(feasts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: fabletools</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'janitor'
-
-The following objects are masked from 'package:stats':
-
-    chisq.test, fisher.test</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the filepath  </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>rootdir <span class="ot">&lt;-</span> (<span class="st">"/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>datadir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(rootdir,<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tufte)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(feasts)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the filepath  </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>rootdir <span class="ot">&lt;-</span> (<span class="st">"/Users/lianechen/Documents/MEDS_2023/Fall_2023/EDS222/Final/eds222-climateadapt"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>datadir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(rootdir,<span class="st">"data"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># import data</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>city_indicators <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/City Indicators.csv"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>readiness <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Overall Risk &amp; Readiness Scores.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>city_indicators <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/City Indicators.csv"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>readiness <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Overall Risk &amp; Readiness Scores.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean column names for both datasets</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>city_indicators <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(city_indicators)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>readiness <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check number of observations for city_indicators file</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(city_indicators)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean column names for both datasets</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>city_indicators <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(city_indicators)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>readiness <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(readiness)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># check number of observations for city_indicators file</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(city_indicators)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 278</code></pre>
 </div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check number of observations for readiness file</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check number of observations for readiness file</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 278</code></pre>
 </div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge city_indicators and readiness files by city name</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(city_indicators, readiness, <span class="at">by =</span> <span class="st">"city"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check that number of obersvations is consistent</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(merged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merge city_indicators and readiness files by city name</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(city_indicators, readiness, <span class="at">by =</span> <span class="st">"city"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check that number of obersvations is consistent</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(merged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 278</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean column names</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"geo_id.x"</span>] <span class="ot">&lt;-</span> <span class="st">"geo_id"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"state.x"</span>] <span class="ot">&lt;-</span> <span class="st">"state"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"latitutde"</span>] <span class="ot">&lt;-</span> <span class="st">"latitude"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># streamline the columns so only relevant ones are kept</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>income_readiness <span class="ot">&lt;-</span> merged[, <span class="fu">c</span>(<span class="st">"city"</span>, <span class="st">"state"</span>, <span class="st">"geo_id"</span>, <span class="st">"percent_of_population_spending_over_50_percent_of_income_on_rent_2015"</span>, <span class="st">"percent_of_population_in_poverty_2015"</span>, <span class="st">"latitude"</span>, <span class="st">"longitude"</span>, <span class="st">"county"</span>, <span class="st">"region"</span>, <span class="st">"median_income"</span>, <span class="st">"overall_readiness"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean column names</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"geo_id.x"</span>] <span class="ot">&lt;-</span> <span class="st">"geo_id"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"state.x"</span>] <span class="ot">&lt;-</span> <span class="st">"state"</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(merged)[<span class="fu">colnames</span>(merged) <span class="sc">==</span> <span class="st">"latitutde"</span>] <span class="ot">&lt;-</span> <span class="st">"latitude"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># streamline the columns so only relevant ones are kept</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>income_readiness <span class="ot">&lt;-</span> merged[, <span class="fu">c</span>(<span class="st">"city"</span>, <span class="st">"state"</span>, <span class="st">"geo_id"</span>, <span class="st">"percent_of_population_spending_over_50_percent_of_income_on_rent_2015"</span>, <span class="st">"percent_of_population_in_poverty_2015"</span>, <span class="st">"latitude"</span>, <span class="st">"longitude"</span>, <span class="st">"county"</span>, <span class="st">"region"</span>, <span class="st">"median_income"</span>, <span class="st">"overall_readiness"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create scatter plot with simple regression line included</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>income_readiness, <span class="fu">aes</span>(<span class="at">x=</span>percent_of_population_in_poverty_2015, <span class="at">y =</span> overall_readiness)) <span class="sc">+</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>, <span class="at">formula=</span> y<span class="sc">~</span>x, <span class="at">color=</span><span class="st">"lightcoral"</span>, <span class="at">se=</span>F, <span class="at">linewidth=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatterplot of % in Poverty vs Overall Readiness with Regression Line"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Percent of population in poverty (2015)"</span>, <span class="at">y =</span> <span class="st">"Overall readiness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create scatter plot with simple regression line included</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>income_readiness, <span class="fu">aes</span>(<span class="at">x=</span>percent_of_population_in_poverty_2015, <span class="at">y =</span> overall_readiness)) <span class="sc">+</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.1</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>, <span class="at">formula=</span> y<span class="sc">~</span>x, <span class="at">color=</span><span class="st">"lightcoral"</span>, <span class="at">se=</span>F, <span class="at">linewidth=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatterplot of % in Poverty vs Overall Readiness with Regression Line"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Percent of population in poverty (2015)"</span>, <span class="at">y =</span> <span class="st">"Overall readiness"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="climateadapt_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="climateadapt_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The slope of the regression line shows to be slightly negative, as y decreases while x increases. This seems to make intuitive sense, as increased poverty could relate to decreased ability to adapt to climate variability and extremes.</p>
 <p>The slope is not too steep, so let’s take a look at correlation to see how strongly poverty impacts climate adaptation readiness.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(income_readiness<span class="sc">$</span>percent_of_population_in_poverty_2015, income_readiness<span class="sc">$</span>overall_readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the correlation coefficient to quantify the strength and direction of the relationship between poverty and climate readiness</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(income_readiness<span class="sc">$</span>percent_of_population_in_poverty_2015, income_readiness<span class="sc">$</span>overall_readiness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -0.1565957</code></pre>
 </div>
@@ -243,11 +208,11 @@ The following objects are masked from 'package:stats':
 <p>Interpretation:</p>
 <p>With a correlation coefficient of -0.1565957, there is a slight tendency that areas with a higher percentage of people in poverty may have lower overall adaptation readiness. However, the correlation is weak, suggesting that other factors not considered in this analysis may play a more significant role in determining overall adaptation readiness.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression model</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>linear_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(overall_readiness <span class="sc">~</span> percent_of_population_in_poverty_2015, <span class="at">data =</span> income_readiness)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of the model</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(linear_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># linear regression model</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>linear_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(overall_readiness <span class="sc">~</span> percent_of_population_in_poverty_2015, <span class="at">data =</span> income_readiness)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary of the model</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(linear_regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -277,8 +242,8 @@ F-statistic: 6.938 on 1 and 276 DF,  p-value: 0.008913</code></pre>
 <p>The intercept represents the estimated value of the dependent variable when all independent variables are zero.</p>
 <p>In this context, when the percentage of the population in poverty is zero, the estimated value of overall adaptation readiness is approximately 0.5098.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hypothesis testing</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(linear_regression)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let's look at coefficients</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(linear_regression)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                          Estimate   Std. Error   t value
 (Intercept)                            0.509814590 0.0163942390 31.097179
@@ -294,50 +259,52 @@ percent_of_population_in_poverty_2015 8.913263e-03</code></pre>
 <p>The t-value of -2.634 indicates that this coefficient is statistically significant (p = 0.00891), suggesting that the percentage of the population in poverty has a significant effect on overall adaptation readiness.</p>
 <p>In summary, the model suggests that both the intercept and the percentage of the population in poverty are statistically significant in predicting overall adaptation readiness.</p>
 </section>
-<section id="hypothesis-testing" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h2>
+<section id="two-tailed-t-testing" class="level2">
+<h2 class="anchored" data-anchor-id="two-tailed-t-testing">Two-Tailed T-Testing</h2>
 <p>I am curious whether there is a difference between how poverty impacts climate readiness in different regions of the country. Let’s conduct a hypothesis test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute point estimate</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pt_est_poverty_west <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(percent_of_population_in_poverty_2015))</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>pt_est_poverty_south <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> </span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(percent_of_population_in_poverty_2015))</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>point_est <span class="ot">=</span> <span class="fu">as.numeric</span>(pt_est_poverty_west <span class="sc">-</span> pt_est_poverty_south)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(point_est) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute point estimate</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pt_est_poverty_west <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(percent_of_population_in_poverty_2015))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>pt_est_poverty_south <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(percent_of_population_in_poverty_2015))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>point_est <span class="ot">=</span> <span class="fu">as.numeric</span>(pt_est_poverty_west <span class="sc">-</span> pt_est_poverty_south)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(point_est) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -3.538473</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute standard error</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>()</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>()</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">sd</span>(percent_of_population_in_poverty_2015, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">sd</span>(percent_of_population_in_poverty_2015, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1 <span class="sc">+</span> s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2))</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(SE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute standard error</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> <span class="fu">count</span>()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"West"</span>) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">sd</span>(percent_of_population_in_poverty_2015, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">=</span> income_readiness <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"South"</span>) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">sd</span>(percent_of_population_in_poverty_2015, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1 <span class="sc">+</span> s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(SE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.18189</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute test statistic</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>zscore <span class="ot">=</span> (point_est <span class="sc">-</span> <span class="dv">0</span>)<span class="sc">/</span>SE</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zscore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute test statistic</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>zscore <span class="ot">=</span> (point_est <span class="sc">-</span> <span class="dv">0</span>)<span class="sc">/</span>SE</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zscore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -2.99391</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>two_tailed <span class="ot">&lt;-</span> <span class="fu">t.test</span>(income_readiness<span class="sc">$</span>overall_readiness[income_readiness<span class="sc">$</span>region<span class="sc">==</span><span class="st">"West"</span>], income_readiness<span class="sc">$</span>overall_readiness[income_readiness<span class="sc">$</span>region<span class="sc">==</span><span class="st">"South"</span>])</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>two_tailed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#construct two-tailed t-test</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>two_tailed <span class="ot">&lt;-</span> <span class="fu">t.test</span>(income_readiness<span class="sc">$</span>overall_readiness[income_readiness<span class="sc">$</span>region<span class="sc">==</span><span class="st">"West"</span>], income_readiness<span class="sc">$</span>overall_readiness[income_readiness<span class="sc">$</span>region<span class="sc">==</span><span class="st">"South"</span>])</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#print</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>two_tailed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -352,20 +319,14 @@ mean of x mean of y
 0.3952240 0.4566467 </code></pre>
 </div>
 </div>
-<pre><code>Interpreting P-value and Hypothesis Testing for Different Regions (West and South)
-p-value: 0.01698
-
-Null: The mean score for overall climate readiness in the West region is equal to the mean score for overall climate readiness in the South region (no difference).
-        H_0: u_WestReadiness - u_SouthReadiness = 0
-        
-Alternative: The mean score for overall climate readiness in the West region is NOT equal to the mean score for overall climate readiness in the South region (yes, there is a difference).
-       H_A: u_WestReadiness - u_SouthReadiness != 0
-
-Given that the p-value is less than the significance level of alpha=0.05, we reject the null hypothesis. Therefore, we can say that there is a difference in mean overall climate readiness between the West and the South. </code></pre>
+<p>Interpreting P-value and Hypothesis Testing for Different Regions (West and South) p-value: 0.01698</p>
+<p>Null: The mean score for overall climate readiness in the West region is equal to the mean score for overall climate readiness in the South region when considering the impact of poverty (no difference). H_0: u_WestReadiness - u_SouthReadiness = 0</p>
+<p>Alternative: The mean score for overall climate readiness in the West region is NOT equal to the mean score for overall climate readiness in the South region when considering the impact of poverty (yes, there is a difference). H_A: u_WestReadiness - u_SouthReadiness != 0</p>
+<p>Given that the p-value is less than the significance level of ‘alpha=0.05’, we reject the null hypothesis. Therefore, we can say that there is a difference in mean overall climate readiness between the West and the South when considering the impact of poverty.</p>
 </section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
-<p>We are able to reject the null hypothesis and conclude that the percentage of people living in poverty does have an impact on a city’s climate readiness score. It should be noted that while there is a correlation, it is relatively weak, which suggests that further analysis should be completed.</p>
+<p>We are able to reject the null hypothesis and conclude that the percentage of people living in poverty does indeed have an impact on a city’s climate readiness score. It should be noted that while there is a correlation, it is relatively weak, which suggests that further analysis should be completed.</p>
 </section>
 <section id="future-work" class="level2">
 <h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
@@ -373,7 +334,7 @@ Given that the p-value is less than the significance level of alpha=0.05, we rej
 <p>In summary, the negative correlation coefficient suggests a weak tendency for areas with a higher percentage of people in poverty to have lower overall adaptation readiness. The strength of this relationship is not strong, and it’s important to interpret such correlations cautiously, considering other factors that might influence the observed pattern. Potential areas for further work are described below.</p>
 <section id="more-cities-data" class="level3">
 <h3 class="anchored" data-anchor-id="more-cities-data">More Cities Data</h3>
-<p>The datasets used included 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000. However, increased data for cities with population under 100,000 would provide a broader understanding of potential opportunity areas for climate adaptation.</p>
+<p>The datasets used included 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 people. However, increased data for cities with population under 100,000 would provide a broader understanding of potential opportunity areas for climate adaptation.</p>
 </section>
 <section id="additional-years-of-poverty-data" class="level3">
 <h3 class="anchored" data-anchor-id="additional-years-of-poverty-data">Additional Years of Poverty Data</h3>
@@ -381,16 +342,26 @@ Given that the p-value is less than the significance level of alpha=0.05, we rej
 </section>
 <section id="wealth-data" class="level3">
 <h3 class="anchored" data-anchor-id="wealth-data">Wealth Data</h3>
-<p>We have available data for percentage of populations living in poverty, but what about wealthy populations? It would be helpful to be able to statistically compare whether wealth has an impact on climate adaptation readiness.</p>
+<p>We have available data for percentage of populations living in poverty, but what about wealthy populations? It would be helpful (and interesting!) to be able to statistically compare whether wealth has an impact on climate readiness.</p>
 </section>
 </section>
 <section id="code-availability" class="level2">
 <h2 class="anchored" data-anchor-id="code-availability">Code Availability</h2>
-<pre><code>Git</code></pre>
+<p>https://github.com/lchenhub/eds222-climate-adaptation.git</p>
 </section>
-<section id="literature-cited" class="level2">
-<h2 class="anchored" data-anchor-id="literature-cited">Literature Cited</h2>
-<p>https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en https://gain-uaa.nd.edu/about/ https://www.un.org/en/climatechange/climate-adaptation https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7 https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&amp;text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations.</p>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<section id="data-1" class="level3">
+<h3 class="anchored" data-anchor-id="data-1">Data</h3>
+<p>University of Notre Dame, Global Adaptation Initiative: https://gain-uaa.nd.edu/</p>
+</section>
+<section id="literature-cited" class="level3">
+<h3 class="anchored" data-anchor-id="literature-cited">Literature Cited</h3>
+<p>European Commission 2003. Adaptation to climate change. https://climate.ec.europa.eu/eu-action/adaptation-climate-change_en</p>
+<p>United Nations 2023a. Climate Adaptation. https://www.un.org/en/climatechange/climate-adaptation</p>
+<p>United Nations 2023b. New elements and dimensions of adaptation under the Paris Agreement (Article 7). https://unfccc.int/topics/adaptation-and-resilience/the-big-picture/new-elements-and-dimensions-of-adaptation-under-the-paris-agreement-article-7</p>
+<p>United Stated Environmental Protection Agency 2023. Climate Change and the Health of Socially Vulnerable People. Last updated October 16, 2023. https://www.epa.gov/climateimpacts/climate-change-and-health-socially-vulnerable-people#:~:text=Increases%20in%20average%20and%20extreme,including%20certain%20socially%20vulnerable%20groups.&amp;text=These%20include%20low%2Dincome%20households,experiencing%20homelessness%2C%20and%20immigrant%20populations</p>
+</section>
 </section>
 </section>
 
