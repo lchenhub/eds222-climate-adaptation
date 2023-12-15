@@ -28,7 +28,7 @@ Adaptation and resilience refers to adjustments in ecological, social or economi
 
 This analysis will provide exploratory analysis on whether poverty is a factor in how ready a city is for climate change. A total of 278 cities within the United States, including 50 states and Puerto Rico, whose populations are above 100,000 people will be examined.
 
-![](images/Screenshot 2023-12-15 at 2.15.10 PM.png){width="80%"}
+![](images/Screenshot%202023-12-15%20at%202.15.10%20PM.png){width="80%"}
 
 ### Data
 
