@@ -1,9 +1,15 @@
 ---
 title: "Impact of Poverty on a City's Overall Readiness for Climate Adaptation"
-author: Liane Chen
-published: December 15, 2023
-format: html
-editor: visual
+author: 
+  - name: Liane Chen
+    url: https://lchenhub.github.io/
+    affiliation: MEDS (UCSB) 
+    affiliation-url: https://bren.ucsb.edu/masters-programs/master-environmental-data-science
+date: 12-12-2023
+categories: [MEDS, Statistics, Poverty, Climate Adaptation, R]
+citation:
+    url: https://lchenhub.github.io/blog/2023-12-12-Poverty-and-Climate-Readiness/
+image: images/poverty_climate.jpg
 ---
 
 # Introduction
